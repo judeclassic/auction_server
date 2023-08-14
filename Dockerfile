@@ -8,6 +8,7 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm install
+RUN npx tsc
 
 # Copy source code
 COPY . .
