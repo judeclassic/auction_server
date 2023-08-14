@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tsc",
+    "prestart": "tsc",
     "dev": "NODE_ENV=development nodemon src/index.ts",
     "start": "node build/index.js",
     "test": "NODE_ENV=test jest --forceExit --detectOpenHandles"
