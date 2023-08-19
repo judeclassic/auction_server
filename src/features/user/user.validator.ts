@@ -6,7 +6,7 @@ import { ICreateUserRequest, ILoginUserRequest } from "../../shared/types/reques
 class UserValidator  extends _BaseValidator{
   userInformation =  ({
     name,
-    emailAddress,
+    email_address,
   }: ICreateUserRequest): IError[] => {
     const errors: IError[] = [];
 
@@ -15,7 +15,7 @@ class UserValidator  extends _BaseValidator{
       errors.push({ field: 'name', message: _validateUsername.message });
     }
 
-    const _validatePhoneNumber = this._validateEmail(emailAddress);
+    const _validatePhoneNumber = this._validateEmail(email_address);
     if (_validatePhoneNumber.status === false && _validatePhoneNumber.message ) {
       errors.push({ field: 'emailAddress', message: _validatePhoneNumber.message });
     }

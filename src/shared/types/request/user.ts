@@ -1,11 +1,11 @@
 
 export type ICreateUserRequest =  {
     name: string;
-    emailAddress: string;
+    email_address: string;
     password: string;
 }
 
 export type ILoginUserRequest =  {
-    emailAddress: string;
+    email_address: string;
     password: string;
 }

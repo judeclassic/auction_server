@@ -26,8 +26,8 @@ class AuthService {
   }
 
   public updateProfile = async (userId: string, userRequest: Omit<IUser, 'id'>): Promise<{ errors?: IError[]; user?: IUser }> => {
-    if ( userRequest.emailAddress ) {
-      const userWithEmailExists = await this._userModel.findOne({ emailAddress: userRequest.emailAddress });
+    if ( userRequest.email_address ) {
+      const userWithEmailExists = await this._userModel.findOne({ emailAddress: userRequest.email_address });
       if ( userWithEmailExists ) {
         return { errors: [ERROR_USER_ALREADY_EXISTS_WITH_EMAIL] };
       }
@@ -39,7 +39,7 @@ class AuthService {
     const accessToken = this._authRepo.encryptToken({
         id: user._id,
         username: user.name,
-        email: user.emailAddress,
+        email: user.email_address,
         createdAt: user.createdAt?.toString(),
     }, TokenType.accessToken);
 

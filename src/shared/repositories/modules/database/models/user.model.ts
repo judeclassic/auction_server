@@ -3,28 +3,22 @@ import { Schema, model } from "mongoose";
 export interface IUser {
     _id?: string;
     name: string;
-    emailAddress: string;
-    country?: string;
+    email_address: string;
     password: string;
     updatedAt?: Date;
     createdAt?: Date;
     accessToken?: string;
-    isVerified?: boolean;
-    authenticationCode?: string;
 }
 
 const UserSchema = new Schema<IUser>({
   name: {
     type: String,
   },
-  emailAddress: {
+  email_address: {
     type: String,
     trim: true,
   },
   password: {
-    type: String,
-  },
-  country: {
     type: String,
   },
   updatedAt: {
@@ -37,13 +31,6 @@ const UserSchema = new Schema<IUser>({
   },
   accessToken: {
     type: String
-  },
-  authenticationCode: {
-    type: String,
-  },
-  isVerified: {
-    type: Boolean,
-    default: false
   },
 });
 

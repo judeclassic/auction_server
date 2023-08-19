@@ -7,7 +7,7 @@ class AuthValidator  extends _BaseValidator{
   register =  ({
     name,
     password,
-    emailAddress,
+    email_address,
   }: ICreateUserRequest): IError[] => {
     const errors: IError[] = [];
 
@@ -16,7 +16,7 @@ class AuthValidator  extends _BaseValidator{
       errors.push({ field: 'name', message: _validateUsername.message });
     }
 
-    const _validatePhoneNumber = this._validateEmail(emailAddress);
+    const _validatePhoneNumber = this._validateEmail(email_address);
     if (_validatePhoneNumber.status === false && _validatePhoneNumber.message ) {
       errors.push({ field: 'emailAddress', message: _validatePhoneNumber.message });
     }
@@ -29,10 +29,10 @@ class AuthValidator  extends _BaseValidator{
     return errors;
   }
   
-  login = ({ emailAddress, password }: ILoginUserRequest) => {
+  login = ({ email_address, password }: ILoginUserRequest) => {
     const errors: IError[] = [];
 
-    const validatePhone = this._validateEmail(emailAddress);
+    const validatePhone = this._validateEmail(email_address);
     if (validatePhone.status === false && validatePhone.message ) {
       errors.push({ field: 'emailAddress', message: validatePhone.message });
     }

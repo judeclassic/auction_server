@@ -25,8 +25,9 @@ class AuthService {
     this._authRepo = authRepo;
   }
 
-  public createUser = async ( { name, emailAddress, password }: ICreateUserRequest): Promise<{ errors?: IError[]; user?: IUser }> => {
-    const userWithEmailExists = await this._userModel.findOne({ emailAddress });
+  public createUser = async ( { name, email_address, password }: ICreateUserRequest): Promise<{ errors?: IError[]; user?: IUser }> => {
+    const userWithEmailExists = await this._userModel.findOne({ email_address });
+    console.log(userWithEmailExists)
     if ( userWithEmailExists ) {
       return { errors: [ERROR_USER_ALREADY_EXISTS_WITH_EMAIL] };
     }
@@ -34,7 +35,7 @@ class AuthService {
     password = this._authRepo.encryptPassword(password);
     const request: IUser = {
       name,
-      emailAddress,
+      email_address,
       password,
     };
     
@@ -45,7 +46,7 @@ class AuthService {
     const accessToken = this._authRepo.encryptToken({
         id: user._id,
         username: user.name,
-        email: user.emailAddress,
+        email: user.email_address,
         createdAt: user.createdAt?.toString(),
     }, TokenType.accessToken);
 
@@ -54,11 +55,11 @@ class AuthService {
     return { user };
   };
 
-  public loginUser = async ({ emailAddress, password }: ILoginUserRequest): Promise<{
+  public loginUser = async ({ email_address, password }: ILoginUserRequest): Promise<{
     errors?: IError[];
     user?: IUser;
   }> => {
-    const user = await this._userModel.findOne({ emailAddress });
+    const user = await this._userModel.findOne({ email_address });
     if (user == null) return { errors: [ERROR_USER_NOT_FOUND] };
 
     if (!user) return { errors: [ERROR_USER_NOT_FOUND] };
@@ -69,7 +70,7 @@ class AuthService {
     const accessToken = this._authRepo.encryptToken({
         id: user._id,
         username: user.name,
-        email: user.emailAddress,
+        email: user.email_address,
         createdAt: user.createdAt?.toString(),
     }, TokenType.accessToken);
 

@@ -19,13 +19,13 @@ class AuthController {
         sendJson: (code: number, response: ResponseInterface<IUser>)=>void
     )  => {
       const validationErrors = this._authValidator.register({ ...body });
+      console.log(validationErrors)
       if (validationErrors.length > 0) return sendJson(400, { error: validationErrors, code: 400, status: false });
   
-      const { user, errors } = await this._userService.createUser(body);
-      if (errors && errors.length > 0) return sendJson(401, { error: errors, code: 401, status: false });
-      if (user === null) return sendJson(401, { code: 401, status: false });
+      const response = await this._userService.createUser(body);
+      if (!response.user) return sendJson(401, { error: response.errors, code: 401, status: false });
   
-      return sendJson(201, { data: user, code: 201, status: true });
+      return sendJson(201, { data: response.user, code: 201, status: true });
     }
 
     loginUser = async (
@@ -35,8 +35,8 @@ class AuthController {
         const validationErrors = this._authValidator.login({ ...body });
         if (validationErrors.length > 0) return sendJson(403, {code: 403, status: false, error: validationErrors});
   
-        const { emailAddress, password } = body;
-        const response = await this._userService.loginUser({emailAddress, password});
+        const { email_address, password } = body;
+        const response = await this._userService.loginUser({email_address, password});
         if (!response.user) return sendJson(403, { status: false, code: 403, error: response.errors });
   
         return sendJson(200, { status: true, code: 200, data: response.user });

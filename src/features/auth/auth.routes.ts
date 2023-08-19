@@ -11,8 +11,8 @@ const authRoutes = async ({router}: {router: RequestHandler}) => {
     const userService = new AuthService({authRepo, userModel: UserModel});
     const authController = new AuthController({ authValidator, userService});
     
-    router.postWithBody('sign-up', authController.registerUser);
-    router.postWithBody('sign-in', authController.loginUser);
+    router.postWithBody('/signup', authController.registerUser);
+    router.postWithBody('/signin', authController.loginUser);
 }
 
 export default authRoutes;
