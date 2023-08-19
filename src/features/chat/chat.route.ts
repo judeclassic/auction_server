@@ -6,6 +6,7 @@ const chatRoutes = (server: any) => {
     const io = new Server(server, defaultConfig.socketCorsSettings);
 
     const connection = io.of('/auction');
+    
     // const messages = [
     //     'dragon',
     //     'goat',
