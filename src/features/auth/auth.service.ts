@@ -25,7 +25,7 @@ class AuthService {
     this._authRepo = authRepo;
   }
 
-  public createUser = async ( { name, email_address, password }: ICreateUserRequest): Promise<{ errors?: IError[]; user?: IUser }> => {
+  public createUser = async ( { name, username, email_address, password }: ICreateUserRequest): Promise<{ errors?: IError[]; user?: IUser }> => {
     const userWithEmailExists = await this._userModel.findOne({ email_address });
     console.log(userWithEmailExists)
     if ( userWithEmailExists ) {
@@ -35,6 +35,7 @@ class AuthService {
     password = this._authRepo.encryptPassword(password);
     const request: IUser = {
       name,
+      username,
       email_address,
       password,
     };
