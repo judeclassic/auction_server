@@ -4,7 +4,7 @@ import { ICreateUserRequest, ILoginUserRequest } from "../../shared/types/reques
 import IError from "../../shared/types/error/error";
 
 const ERROR_USER_ALREADY_EXISTS_WITH_EMAIL: IError = {
-  field: 'emailAddress',
+  field: 'email_address',
   message: 'A user with this email already exists.',
 };
 const ERROR_USER_ALREADY_EXISTS_WITH_USERNAME: IError = {
@@ -43,8 +43,8 @@ class AuthService {
     password = this._authRepo.encryptPassword(password);
     const request: IUser = {
       name,
-      username,
-      email_address,
+      username: username.toLowerCase(),
+      email_address: email_address.toLowerCase(),
       password,
     };
     
@@ -59,7 +59,7 @@ class AuthService {
         createdAt: user.createdAt?.toString(),
     }, TokenType.accessToken);
 
-    user.accessToken = accessToken; 
+    user.accessToken = accessToken;
 
     return { user };
   };
