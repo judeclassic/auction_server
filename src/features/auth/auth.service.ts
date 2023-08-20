@@ -13,7 +13,7 @@ const ERROR_USER_ALREADY_EXISTS_WITH_USERNAME: IError = {
 };
 const ERROR_USER_NOT_FOUND: IError = {
   field: 'password',
-  message: 'User with this email/password combination does not exist.',
+  message: 'Invalid login credencials',
 };
 const ERROR_UNABLE_TO_SAVE_USER: IError = {
   message: 'Unable to save user data on DB',
@@ -24,7 +24,6 @@ class AuthService {
   private _userModel: typeof UserModel;
 
   constructor ({ authRepo, userModel} : { authRepo: AuthorizationRepo, userModel: typeof UserModel }){
-
     this._userModel = userModel;
     this._authRepo = authRepo;
   }
@@ -68,7 +67,7 @@ class AuthService {
     errors?: IError[];
     user?: IUser;
   }> => {
-    const user = await this._userModel.findOne({ username });
+    const user = await this._userModel.findOne({ username: username.toLowerCase() });
     if (user == null) return { errors: [ERROR_USER_NOT_FOUND] };
 
     if (!user) return { errors: [ERROR_USER_NOT_FOUND] };
