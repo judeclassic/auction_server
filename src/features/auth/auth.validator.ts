@@ -35,12 +35,12 @@ class AuthValidator  extends _BaseValidator{
     return errors;
   }
   
-  login = ({ email_address, password }: ILoginUserRequest) => {
+  login = ({ username, password }: ILoginUserRequest) => {
     const errors: IError[] = [];
 
-    const validatePhone = this._validateEmail(email_address);
-    if (validatePhone.status === false && validatePhone.message ) {
-      errors.push({ field: 'emailAddress', message: validatePhone.message });
+    const validateUsername = this._validateName(username);
+    if (validateUsername.status === false && validateUsername.message ) {
+      errors.push({ field: 'username', message: validateUsername.message });
     }
 
     const _validatePassword = this._validatePassword(password);

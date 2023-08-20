@@ -35,8 +35,8 @@ class AuthController {
         const validationErrors = this._authValidator.login({ ...body });
         if (validationErrors.length > 0) return sendJson(403, {code: 403, status: false, error: validationErrors});
   
-        const { email_address, password } = body;
-        const response = await this._userService.loginUser({email_address, password});
+        const { username, password } = body;
+        const response = await this._userService.loginUser({username, password});
         if (!response.user) return sendJson(403, { status: false, code: 403, error: response.errors });
   
         return sendJson(200, { status: true, code: 200, data: response.user });

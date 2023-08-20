@@ -7,6 +7,10 @@ const ERROR_USER_ALREADY_EXISTS_WITH_EMAIL: IError = {
   field: 'emailAddress',
   message: 'A user with this email already exists.',
 };
+const ERROR_USER_ALREADY_EXISTS_WITH_USERNAME: IError = {
+  field: 'username',
+  message: 'A user with this username already exists.',
+};
 const ERROR_USER_NOT_FOUND: IError = {
   field: 'password',
   message: 'User with this email/password combination does not exist.',
@@ -27,9 +31,13 @@ class AuthService {
 
   public createUser = async ( { name, username, email_address, password }: ICreateUserRequest): Promise<{ errors?: IError[]; user?: IUser }> => {
     const userWithEmailExists = await this._userModel.findOne({ email_address });
-    console.log(userWithEmailExists)
     if ( userWithEmailExists ) {
       return { errors: [ERROR_USER_ALREADY_EXISTS_WITH_EMAIL] };
+    }
+
+    const userWithUsername = await this._userModel.findOne({ username });
+    if ( userWithUsername ) {
+      return { errors: [ERROR_USER_ALREADY_EXISTS_WITH_USERNAME] };
     }
 
     password = this._authRepo.encryptPassword(password);
@@ -56,11 +64,11 @@ class AuthService {
     return { user };
   };
 
-  public loginUser = async ({ email_address, password }: ILoginUserRequest): Promise<{
+  public loginUser = async ({ username, password }: ILoginUserRequest): Promise<{
     errors?: IError[];
     user?: IUser;
   }> => {
-    const user = await this._userModel.findOne({ email_address });
+    const user = await this._userModel.findOne({ username });
     if (user == null) return { errors: [ERROR_USER_NOT_FOUND] };
 
     if (!user) return { errors: [ERROR_USER_NOT_FOUND] };
