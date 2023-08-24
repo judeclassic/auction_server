@@ -2,6 +2,7 @@ import AuthorizationRepo, { TokenType } from "../../shared/repositories/modules/
 import { IUser, UserModel } from "../../shared/repositories/modules/database/models/user.model";
 import { ICreateUserRequest, ILoginUserRequest } from "../../shared/types/request/user";
 import IError from "../../shared/types/error/error";
+import MailerRepo from "../../shared/repositories/modules/mailer";
 
 const ERROR_USER_ALREADY_EXISTS_WITH_EMAIL: IError = {
   field: 'email_address',
@@ -19,13 +20,25 @@ const ERROR_UNABLE_TO_SAVE_USER: IError = {
   message: 'Unable to save user data on DB',
 };
 
+const ERROR_THIS_EMAIL_DO_NOT_EXIST: IError = {
+  field: 'email_address',
+  message: 'This email is not register with us'
+}
+
+const ERROR_CODE_NOT_VALID: IError = {
+  field: 'code',
+  message: 'Code is not valid'
+}
+
 class AuthService {
   private _authRepo: AuthorizationRepo;
+  private _mailRepo: MailerRepo;
   private _userModel: typeof UserModel;
 
-  constructor ({ authRepo, userModel} : { authRepo: AuthorizationRepo, userModel: typeof UserModel }){
+  constructor ({ authRepo, mailRepo, userModel} : { authRepo: AuthorizationRepo, mailRepo: MailerRepo; userModel: typeof UserModel }){
     this._userModel = userModel;
     this._authRepo = authRepo;
+    this._mailRepo = mailRepo;
   }
 
   public createUser = async ( { name, username, email_address, password }: ICreateUserRequest): Promise<{ errors?: IError[]; user?: IUser }> => {
@@ -63,11 +76,11 @@ class AuthService {
     return { user };
   };
 
-  public loginUser = async ({ username, password }: ILoginUserRequest): Promise<{
+  public loginUser = async ({ email_address, password }: ILoginUserRequest): Promise<{
     errors?: IError[];
     user?: IUser;
   }> => {
-    const user = await this._userModel.findOne({ username: username.toLowerCase() });
+    const user = await this._userModel.findOne({ email_address: email_address.toLowerCase() });
     if (user == null) return { errors: [ERROR_USER_NOT_FOUND] };
 
     if (!user) return { errors: [ERROR_USER_NOT_FOUND] };
@@ -84,9 +97,61 @@ class AuthService {
 
     user.accessToken = accessToken;
 
-    this._userModel.findByIdAndUpdate( user._id!, { accessToken });
+    this._userModel.findByIdAndUpdate( user._id, { accessToken });
 
     return { user };
+  };
+
+  public forgetPassword = async ({ email_address }: { email_address: string }): Promise<{
+    errors?: IError[];
+    status?: boolean;
+  }> => {
+    const user = await this._userModel.findOne({ email_address: email_address.toLowerCase() });
+    if (user == null || !user) return { errors: [ERROR_THIS_EMAIL_DO_NOT_EXIST] };
+
+    const authenticationCode = this._authRepo.generateVerificationCode(6);
+
+    console.log(authenticationCode);
+
+    this._userModel.findByIdAndUpdate( user._id, { 
+      authenticationCode: authenticationCode
+    });
+
+    this._mailRepo.sendVerificationEmail(email_address, {
+      name: user.name.split(' ')[0],
+      subject: 'Verification code',
+      code: authenticationCode,
+    });
+
+    return { status: true };
+  };
+
+  public verifyCode = async ({ email_address, code }: { email_address: string, code: string }): Promise<{
+    errors?: IError[];
+    status?: boolean;
+  }> => {
+    const user = await this._userModel.findOne({ email_address: email_address.toLowerCase() });
+    if (user == null || !user) return { errors: [ERROR_THIS_EMAIL_DO_NOT_EXIST] };
+
+    if (user.authenticationCode !== code) return { errors: [ERROR_CODE_NOT_VALID] };
+
+    return { status: true };
+  };
+
+  public newPassword = async ({ email_address, code, new_password }: { email_address: string; code: string; new_password: string }): Promise<{
+    errors?: IError[];
+    status?: boolean;
+  }> => {
+    const user = await this._userModel.findOne({ email_address: email_address.toLowerCase() });
+    if (user == null || !user) return { errors: [ERROR_THIS_EMAIL_DO_NOT_EXIST] };
+
+    if (user.authenticationCode !== code) return { errors: [ERROR_CODE_NOT_VALID] };
+
+    const password = this._authRepo.encryptPassword(new_password);
+
+    this._userModel.findByIdAndUpdate( user._id, { password });
+
+    return { status: true };
   };
 
 }

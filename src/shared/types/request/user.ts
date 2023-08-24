@@ -7,6 +7,6 @@ export type ICreateUserRequest =  {
 }
 
 export type ILoginUserRequest =  {
-    username: string;
+    email_address: string;
     password: string;
 }

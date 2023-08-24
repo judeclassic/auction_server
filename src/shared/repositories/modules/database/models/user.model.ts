@@ -9,6 +9,7 @@ export interface IUser {
     updatedAt?: Date;
     createdAt?: Date;
     accessToken?: string;
+    authenticationCode?: string;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -34,6 +35,9 @@ const UserSchema = new Schema<IUser>({
     default: new Date()
   },
   accessToken: {
+    type: String
+  },
+  authenticationCode: {
     type: String
   },
 });

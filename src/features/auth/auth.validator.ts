@@ -35,17 +35,51 @@ class AuthValidator  extends _BaseValidator{
     return errors;
   }
   
-  login = ({ username, password }: ILoginUserRequest) => {
+  login = ({ email_address, password }: ILoginUserRequest) => {
     const errors: IError[] = [];
 
-    const validateUsername = this._validateName(username);
-    if (validateUsername.status === false && validateUsername.message ) {
-      errors.push({ field: 'username', message: validateUsername.message });
+    const validateEmail = this._validateEmail(email_address);
+    if (validateEmail.status === false && validateEmail.message ) {
+      errors.push({ field: 'email_address', message: validateEmail.message });
     }
 
     const _validatePassword = this._validatePassword(password);
     if (_validatePassword.status === false && _validatePassword.message ) {
       errors.push({ field: 'password', message: _validatePassword.message });
+    }
+
+    return errors;
+  }
+
+  beforeForgetPassword =  ({
+    email_address,
+  }: { email_address: string }): IError[] => {
+    const errors: IError[] = [];
+
+    const _validateEmailAddress = this._validateEmail(email_address);
+    if (_validateEmailAddress.status === false && _validateEmailAddress.message ) {
+      errors.push({ field: 'email_address', message: _validateEmailAddress.message });
+    }
+
+    return errors;
+  }
+
+  beforeNewPassword =  ({ email_address, new_password, confirm_password }: { email_address: string, new_password: string, confirm_password: string }): IError[] => {
+    const errors: IError[] = [];
+
+    const _validateEmailAddress = this._validateEmail(email_address);
+    if (_validateEmailAddress.status === false && _validateEmailAddress.message ) {
+      errors.push({ field: 'email_address', message: _validateEmailAddress.message });
+    }
+
+    const _validatePassword = this._validatePassword(new_password);
+    if (_validatePassword.status === false && _validatePassword.message ) {
+      errors.push({ field: 'new_password', message: _validatePassword.message });
+    }
+
+    const _validateConfirmPassword = this._validatePassword(confirm_password);
+    if (_validateConfirmPassword.status === false && _validateConfirmPassword.message ) {
+      errors.push({ field: 'confirmPassword', message: _validateConfirmPassword.message });
     }
 
     return errors;
