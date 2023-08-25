@@ -19,6 +19,7 @@ const chatRoutes = (server: any) => {
 
     const connection = io.of('/auction');
 
+    
     const images = [
         '/dark1.jpeg',
         '/head.png',
