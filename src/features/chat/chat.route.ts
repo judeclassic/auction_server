@@ -38,7 +38,7 @@ const chatRoutes = (server: any) => {
             return;
         }
         currentImage++;
-    }, 1000 * 60 * 90);
+    }, 1000 * 60 * 1.5);
 
     connection.on('connection', (socket) => {
         socket.on('send-message', (message: IMessage) => {
