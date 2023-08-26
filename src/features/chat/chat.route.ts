@@ -25,7 +25,7 @@ const chatRoutes = (server: any) => {
             return;
         }
         currentImage++;
-    }, 1000 * 12);
+    }, (randomIntFromInterval(60000, 90000)));
 
     connection.on('connection', (socket) => {
         socket.on('send-message', (message: IMessage) => {
@@ -35,6 +35,10 @@ const chatRoutes = (server: any) => {
 }
 
 export default chatRoutes;
+
+function randomIntFromInterval(min: number, max: number) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
+  }
 
 function generateRandomNumber(length: number): string {
     const characters = '0123456789';
