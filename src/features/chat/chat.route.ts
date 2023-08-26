@@ -8,8 +8,11 @@ const chatRoutes = (server: any) => {
     const connection = io.of('/auction');
     
     const images = [
-        '/dark1.jpeg',
-        '/head.png',
+        'https://www.youtube.com/watch?v=JdXubSf5YUc',
+        'https://www.youtube.com/watch?v=jp0kTw1TCy0',
+        'https://www.youtube.com/watch?v=Kxl8CL52rBU',
+        'https://www.youtube.com/watch?v=pSY3i5XHHXo',
+        'https://www.youtube.com/watch?v=Z4N8lzKNfy4',
     ];
 
     let currentImage = 0;
@@ -32,16 +35,19 @@ const chatRoutes = (server: any) => {
     }, (10 * 1000) );
 
     setInterval(() => {
-        connection.emit('images', {
-            name: generateRandomString(6),
-            bid: generateRandomNumberString(8),
-            image: images[currentImage]
-        });
-        if (currentImage === images.length - 1) {
-            currentImage = 0;
-            return;
-        }
-        currentImage++;
+        connection.emit('count-down', generateRandomNumberString(5));
+        setTimeout(() => {
+            connection.emit('images', {
+                name: generateRandomString(6),
+                bid: generateRandomNumberString(8),
+                image: images[currentImage]
+            });
+            if (currentImage === images.length - 1) {
+                currentImage = 0;
+                return;
+            }
+            currentImage++;
+        }, (20));
     }, (randomIntFromInterval(60000, 90000)));
 
     connection.on('connection', (socket) => {
