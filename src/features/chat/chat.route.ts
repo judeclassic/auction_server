@@ -29,7 +29,7 @@ const chatRoutes = (server: any) => {
 
         currentRandomNumber = currentRandomNumber + randomNumber;
         connection.emit('current-users', (currentRandomNumber));
-    }, (2 * 1000) );
+    }, (10 * 1000) );
 
     setInterval(() => {
         connection.emit('images', {
