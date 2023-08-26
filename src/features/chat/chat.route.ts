@@ -13,11 +13,28 @@ const chatRoutes = (server: any) => {
     ];
 
     let currentImage = 0;
+    let currentRandomNumber = 300;
+    let theNegative = false;
+
+    setInterval(() => {
+        let randomNumber = randomIntFromInterval(3, 10);
+        if (!theNegative && (randomNumber === 3 || randomNumber === 4)) randomNumber = - randomNumber;
+        if (theNegative && !(randomNumber === 3 || randomNumber === 4)) randomNumber = - randomNumber;
+
+        if (currentRandomNumber > 1400) {
+            theNegative = true;
+        } else if (currentRandomNumber < 1250) {
+            theNegative = false;
+        }
+
+        currentRandomNumber = currentRandomNumber + randomNumber;
+        connection.emit('current-users', (currentRandomNumber));
+    }, (2 * 1000) );
 
     setInterval(() => {
         connection.emit('images', {
             name: generateRandomString(6),
-            bid: generateRandomNumber(8),
+            bid: generateRandomNumberString(8),
             image: images[currentImage]
         });
         if (currentImage === images.length - 1) {
@@ -38,9 +55,9 @@ export default chatRoutes;
 
 function randomIntFromInterval(min: number, max: number) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
-  }
+}
 
-function generateRandomNumber(length: number): string {
+function generateRandomNumberString(length: number): string {
     const characters = '0123456789';
     let randomString = '';
   
