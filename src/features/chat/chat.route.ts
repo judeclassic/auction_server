@@ -5,20 +5,7 @@ import { IMessage } from '../../shared/types/request/message';
 const chatRoutes = (server: any) => {
     const io = new Server(server, defaultConfig.socketCorsSettings);
 
-    function generateRandomString(length: number): string {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let randomString = '';
-      
-        for (let i = 0; i < length; i++) {
-          const randomIndex = Math.floor(Math.random() * characters.length);
-          randomString += characters[randomIndex];
-        }
-      
-        return randomString;
-    }
-
     const connection = io.of('/auction');
-
     
     const images = [
         '/dark1.jpeg',
@@ -30,7 +17,7 @@ const chatRoutes = (server: any) => {
     setInterval(() => {
         connection.emit('images', {
             name: generateRandomString(6),
-            bid: generateRandomString(8),
+            bid: generateRandomNumber(8),
             image: images[currentImage]
         });
         if (currentImage === images.length - 1) {
@@ -38,7 +25,7 @@ const chatRoutes = (server: any) => {
             return;
         }
         currentImage++;
-    }, 1000 * 60 * 1.5);
+    }, 1000 * 12);
 
     connection.on('connection', (socket) => {
         socket.on('send-message', (message: IMessage) => {
@@ -48,3 +35,27 @@ const chatRoutes = (server: any) => {
 }
 
 export default chatRoutes;
+
+function generateRandomNumber(length: number): string {
+    const characters = '0123456789';
+    let randomString = '';
+  
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomString += characters[randomIndex];
+    }
+  
+    return randomString;
+}
+
+function generateRandomString(length: number): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let randomString = '';
+  
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomString += characters[randomIndex];
+    }
+  
+    return randomString;
+}
