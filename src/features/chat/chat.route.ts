@@ -16,7 +16,7 @@ const chatRoutes = (server: any) => {
     ];
 
     let currentImage = 0;
-    let currentRandomNumber = 300;
+    let currentRandomNumber = 1260;
     let theNegative = false;
 
     setInterval(() => {
