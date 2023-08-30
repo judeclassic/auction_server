@@ -14,7 +14,12 @@ const chatRoutes = (server: any) => {
         'pSY3i5XHHXo',
         'Z4N8lzKNfy4',
         'bTkDPjAx_2o',
-        'qlWQAnNgVmE'
+        'qlWQAnNgVmE',
+        'mMJ3Gogi2Qk',
+        'g3pLoVClX9M',
+        '4D89Qr5vH6U',
+        'PpCZPdLC6Cc',
+        '-WtNCR3EDS4',
     ];
 
     let currentImage = 0;
