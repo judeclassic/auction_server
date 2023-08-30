@@ -14,8 +14,9 @@ const ERROR_USER_ALREADY_EXISTS_WITH_USERNAME: IError = {
 };
 const ERROR_USER_NOT_FOUND: IError = {
   field: 'password',
-  message: 'Invalid login credencials',
+  message: 'Invalid Password',
 };
+
 const ERROR_UNABLE_TO_SAVE_USER: IError = {
   message: 'Unable to save user data on DB',
 };

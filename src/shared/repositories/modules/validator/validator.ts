@@ -14,13 +14,13 @@ class _BaseValidator {
             if (!this.strongChecked) {
                 return ({status: true});
             }
-            return ({status: false, message: "Email cannot be null"});
+            return ({status: false, message: "Invalid Email Address"});
         }
         if (!emailRegex.test(email)) {
             if (/^@/.test(email)) {
-                return ({status: false, message: "email is inValid (@ is missing)"});
+                return ({status: false, message: "Invalid Email Address"});
             }
-            return ({status: false, message: "email is inValid"});
+            return ({status: false, message: "Invalid Email Address"});
         }
         return ({status: true, data: {email}});
     }
@@ -32,17 +32,14 @@ class _BaseValidator {
             if (!this.strongChecked) {
                 return ({status: true});
             }
-            return ({status: false, message: "Password cannot be empty"});
+            return ({status: false, message: "Invalid Password"});
         }
-        // if (!passwordRegex.test(password)) {
         if (password.length < 6) {
-            return ({status: false, message: "Password is Invalid (password must be greater than 6)"});
+            return ({status: false, message: "Invalid Password"});
         }
         if (password.length > 30) {
-            return ({status: false, message: "Password is Invalid (password must be less than 30)"});
+            return ({status: false, message: "Invalid Password"});
         }
-            // return ({status: false, message: "Password is Invalid (password should at least 1 capital, 1 small, 1 special, and 1 number)"});
-        // }
         return ({status: true, data: {password}});
     }
 
