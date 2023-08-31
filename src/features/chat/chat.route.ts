@@ -1,5 +1,6 @@
 import { Server } from 'socket.io';
 import defaultConfig from '../../shared/configurations/config';
+import { MessageModel } from '../../shared/repositories/modules/database/models/message.model';
 import { IMessage } from '../../shared/types/request/message';
 
 const chatRoutes = (server: any) => {
@@ -58,9 +59,19 @@ const chatRoutes = (server: any) => {
     }, (randomIntFromInterval(60000, 90000)));
 
     connection.on('connection', (socket) => {
-        socket.on('send-message', (message: IMessage) => {
+        socket.on('send-message', async (message: IMessage) => {
             socket.broadcast.emit('receive-message', message);
+            await MessageModel.create(message);
+            const messageNumber = await MessageModel.count();
+            if (messageNumber > 50) {
+                MessageModel.findOneAndDelete()
+            }
         });
+
+        socket.on('all-message', async (callback: (message: IMessage[]) => void) => {
+            const messages = await MessageModel.find();
+            callback(messages ?? []);
+        })
     });
 }
 

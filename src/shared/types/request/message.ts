@@ -1,5 +1,5 @@
 export type IMessage = {
-    name: string;
+    userName: string;
     message: string;
     createdAt: string;
 }
