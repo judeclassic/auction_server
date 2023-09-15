@@ -58,6 +58,7 @@ class AuthService {
       name,
       username: username.toLowerCase(),
       email_address: email_address.toLowerCase(),
+      isBanned: false,
       password,
     };
     
@@ -88,6 +89,8 @@ class AuthService {
 
     const passwordIsValid = this._authRepo.comparePassword(password, user.password);
     if (!passwordIsValid) return { errors: [ERROR_USER_NOT_FOUND] };
+
+    if (user.isBanned) return { errors: [{field: 'password', message: 'this user have been banned'}] };
 
     const accessToken = this._authRepo.encryptToken({
         id: user._id,

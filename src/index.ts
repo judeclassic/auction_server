@@ -8,6 +8,7 @@ import cors from 'cors';
 import { defaultLogger } from "./shared/repositories/modules/logger";
 import DBConnection from "./shared/repositories/modules/database";
 import dotEnv from 'dotenv'
+import adminRoutes from "./features/admin/admin.routes";
 
 
 dotEnv.config();
@@ -20,6 +21,7 @@ export default server((app, server) => {
     const authenticationRepo = new AuthorizationRepo();
     const router = new RequestHandler({ router: app,  authenticationRepo, host: '/api' });
     
+    router.extend('/user/admin', adminRoutes);
     router.extend('/user/auth', authRoutes);
     router.extend('/user/profile', userRoutes);
 

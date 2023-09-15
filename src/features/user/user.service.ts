@@ -33,17 +33,8 @@ class AuthService {
       }
     }
     
-    const user = await this._userModel.create(userRequest);
+    const user = await this._userModel.findByIdAndUpdate(userId, userRequest);
     if ( !user ) return { errors: [ERROR_UNABLE_TO_SAVE_USER] }
-
-    const accessToken = this._authRepo.encryptToken({
-        id: user._id,
-        username: user.name,
-        email: user.email_address,
-        createdAt: user.createdAt?.toString(),
-    }, TokenType.accessToken);
-
-    user.accessToken = accessToken; 
 
     return { user };
   };
@@ -54,6 +45,7 @@ class AuthService {
   }> => {
     const user = await this._userModel.findById(userId);
     if (user == null) return { errors: [ERROR_USER_NOT_FOUND] };
+    if (user.isBanned) return { errors: [{field: 'password', message: 'this user have been banned'}] };
 
     return { user };
   };

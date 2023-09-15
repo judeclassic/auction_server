@@ -1,25 +1,19 @@
-import { Schema, model, PaginateModel } from "mongoose";
+import { Schema, model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
-export interface IUser {
+export interface IAdmin {
     _id?: string;
     name: string;
     username: string;
     email_address: string;
     password: string;
     updatedAt?: Date;
-    isBanned: boolean;
     createdAt?: Date;
     accessToken?: string;
     authenticationCode?: string;
 }
-export interface IMultipleUser {
-  users: IUser[];
-  total_users: number;
-  has_next: boolean;
-}
 
-const UserSchema = new Schema<IUser>({
+const AdminSchema = new Schema<IAdmin>({
   name: {
     type: String,
   },
@@ -44,14 +38,9 @@ const UserSchema = new Schema<IUser>({
   accessToken: {
     type: String
   },
-  isBanned: {
-    type: Boolean
-  },
   authenticationCode: {
     type: String
   },
 });
 
-UserSchema.plugin(mongoosePaginate);
-
-export const UserModel = model<IUser, PaginateModel<IUser>>("User", UserSchema);
+export const AdminModel = model<IAdmin>("Admin", AdminSchema);
